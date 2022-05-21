@@ -1,0 +1,22 @@
+version: '3'
+services:
+  java-srv:
+    build:
+      context: java-srv
+    volumes:
+      - ./java-srv/log:/root/log
+    depends_on:
+      - db
+    links:
+      - "db:db"
+
+  db:
+    image: mariadb:latest
+    volumes:
+      - ./db/data_dump:/var/lib/mysql
+      - ./db/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+      - ./db/dump-db.sql:/usr/local/dump-db.sql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_USER=maria
+      - MYSQL_PASSWORD=pass
